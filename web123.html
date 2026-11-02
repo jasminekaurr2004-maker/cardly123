@@ -1,0 +1,1311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardly | Digital Card Studio</title>
+
+<style>
+:root {
+  --pink: #f5b7d2;
+  --lavender: #dcd3ff;
+  --peach: #ffe0cc;
+  --mint: #cdeee0;
+  --dark: #24202b;
+  --muted: #77717e;
+  --white: #ffffff;
+  --bg: #fffafc;
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  line-height: 1.6;
+}
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; }
+img { max-width: 100%; }
+.hidden { display: none !important; }
+
+header {
+  background: rgba(255,255,255,.95);
+  border-bottom: 1px solid #f0e9ef;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(12px);
+}
+.nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 15px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  cursor: pointer;
+}
+.logo span { color: #b18de8; }
+.nav-links {
+  display: flex;
+  gap: 23px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.nav-links button {
+  background: none;
+  border: 0;
+  color: var(--dark);
+  font-weight: 600;
+}
+.nav-links button:hover { color: #a16acb; }
+.cart-button, .primary, .secondary {
+  border: 0;
+  border-radius: 30px;
+  padding: 11px 20px;
+  font-weight: 700;
+  transition: .2s;
+}
+.cart-button, .primary {
+  background: var(--dark);
+  color: white;
+}
+.secondary {
+  background: white;
+  border: 1px solid #e8dfe9;
+  color: var(--dark);
+}
+.primary:hover, .cart-button:hover {
+  background: #8058a8;
+  transform: translateY(-2px);
+}
+.secondary:hover { background: #f5edf9; }
+
+main { min-height: 55vh; }
+.page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 38px 24px 65px;
+}
+.hero {
+  min-height: 440px;
+  border-radius: 28px;
+  padding: 55px;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 30px;
+  align-items: center;
+  background: linear-gradient(130deg, #f8d9e8, #e5dcff 55%, #d7f1e6);
+  overflow: hidden;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #79568d;
+}
+.hero h1 {
+  font-size: clamp(38px, 5vw, 66px);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin: 14px 0;
+}
+.hero p { max-width: 480px; color: #5e5367; margin-bottom: 24px; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-art {
+  position: relative;
+  height: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.floating-card {
+  position: absolute;
+  width: 190px;
+  height: 245px;
+  border-radius: 18px;
+  padding: 25px 17px;
+  box-shadow: 0 20px 45px #66537b25;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.floating-card strong { font-size: 25px; line-height: 1.1; }
+.floating-card small { margin-top: 14px; }
+.card-one { background: #fff7ef; transform: rotate(-13deg) translateX(-60px); }
+.card-two { background: #d7c7fa; transform: rotate(10deg) translateX(60px); }
+.card-two strong { font-family: Georgia, serif; }
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  margin: 42px 0 20px;
+}
+.section-heading h2 { font-size: 29px; letter-spacing: -.7px; }
+.section-heading p { color: var(--muted); font-size: 14px; }
+.categories {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+.category-card {
+  border: 0;
+  border-radius: var(--radius);
+  min-height: 120px;
+  padding: 18px 10px;
+  text-align: center;
+  font-weight: 700;
+  transition: .2s;
+}
+.category-card span { display: block; font-size: 30px; margin-bottom: 6px; }
+.category-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px #0000000c; }
+.cat-pink { background: #fce1ed; }
+.cat-purple { background: #e7ddff; }
+.cat-peach { background: #ffe8d7; }
+.cat-green { background: #d8f2e6; }
+.cat-blue { background: #dceeff; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 23px;
+}
+.product {
+  background: white;
+  border: 1px solid #f0e7ef;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: .25s;
+}
+.product:hover { transform: translateY(-5px); box-shadow: 0 14px 32px #38233b12; }
+.product-art {
+  height: 220px;
+  padding: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.mini-card {
+  width: 150px;
+  height: 175px;
+  border-radius: 13px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px #00000015;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  white-space: pre-line;
+}
+.mini-card strong { font-size: 21px; line-height: 1.2; }
+.mini-card small { font-size: 11px; margin-top: 12px; }
+.heart {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  background: white;
+  border: 0;
+  border-radius: 50%;
+  width: 37px;
+  height: 37px;
+  font-size: 20px;
+}
+.product-info { padding: 17px; }
+.product-info h3 { font-size: 17px; margin-bottom: 4px; }
+.product-info p { color: var(--muted); font-size: 13px; min-height: 40px; }
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin: 13px 0;
+}
+.price { font-weight: 800; font-size: 17px; }
+.tag {
+  background: #f5edf9;
+  color: #8058a8;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 4px 9px;
+}
+.product-actions { display: flex; gap: 8px; }
+.product-actions button { flex: 1; padding: 9px 8px; font-size: 12px; }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+.toolbar input, .toolbar select {
+  padding: 12px 14px;
+  border: 1px solid #e8dfe9;
+  border-radius: 12px;
+  background: white;
+}
+.toolbar input { flex: 1; min-width: 180px; }
+
+.studio-layout {
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  gap: 25px;
+  margin-top: 25px;
+}
+.panel {
+  background: white;
+  border: 1px solid #eee4ee;
+  border-radius: 20px;
+  padding: 25px;
+}
+.panel h3 { margin-bottom: 17px; }
+.field { margin-bottom: 17px; }
+.field label {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5dce8;
+  border-radius: 10px;
+  background: white;
+}
+.field textarea { min-height: 90px; resize: vertical; }
+.palette { display: flex; gap: 10px; flex-wrap: wrap; }
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid white;
+  outline: 1px solid #ddd;
+}
+.swatch.active { outline: 3px solid #8e68ae; }
+.preview-area {
+  background: #f5f0f7;
+  padding: 25px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  min-height: 400px;
+}
+.preview-card {
+  width: min(100%, 330px);
+  min-height: 340px;
+  padding: 35px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: pre-wrap;
+  box-shadow: 0 14px 35px #00000013;
+  transition: .2s;
+  overflow: hidden;
+}
+.preview-card h2 { font-size: 35px; line-height: 1.15; margin-bottom: 15px; }
+.preview-card p { font-size: 16px; }
+.preview-card .from { margin-top: 25px; font-weight: 700; }
+#uploadedPreview { max-width: 150px; max-height: 100px; object-fit: cover; margin-bottom: 15px; border-radius: 8px; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 25px;
+}
+.info-card {
+  background: white;
+  border: 1px solid #f0e7ef;
+  border-radius: 17px;
+  padding: 23px;
+}
+.info-card span { font-size: 30px; }
+.info-card h3 { margin: 8px 0; }
+.info-card p { color: var(--muted); font-size: 14px; }
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 25px;
+}
+.cart-line {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #eee5ef;
+  padding: 16px 0;
+}
+.cart-thumb {
+  width: 72px;
+  height: 80px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 25px;
+}
+.cart-line-info { flex: 1; }
+.cart-line-info small { display: block; color: var(--muted); }
+.quantity { display: flex; align-items: center; gap: 10px; margin-top: 7px; }
+.quantity button { border: 1px solid #e6dce8; background: white; border-radius: 7px; width: 27px; height: 27px; }
+.remove { border: 0; background: none; color: #a34c67; }
+.summary-row { display: flex; justify-content: space-between; margin: 12px 0; }
+.summary-total { border-top: 1px solid #eee4ee; padding-top: 15px; font-size: 19px; font-weight: 800; }
+.full { width: 100%; margin-top: 12px; }
+.empty-state { padding: 40px 15px; text-align: center; color: var(--muted); }
+
+.qr-result { margin-top: 18px; }
+.qr-result img { display: block; width: 180px; height: 180px; background: white; padding: 8px; border: 1px solid #eee; border-radius: 12px; }
+.checkout-form { max-width: 620px; margin: auto; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #28222e;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px #0002;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+  transition: .25s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+.site-footer {
+  background: #080808;
+  color: #f8f8f8;
+  padding: 60px 7% 25px;
+  margin-top: 45px;
+}
+.footer-container { max-width: 1300px; margin: auto; }
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px;
+}
+.footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 13px; }
+.footer-column h3 { font-size: 17px; margin-bottom: 3px; }
+.footer-column a { color: #e5e5e5; font-size: 14px; text-decoration: none; transition: .2s; }
+.footer-column a:hover { color: #f5a9d0; transform: translateX(3px); }
+.footer-column .view-all { font-weight: 700; text-decoration: underline; }
+.footer-social { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; margin: 52px 0 42px; }
+.footer-social strong { margin-right: 3px; }
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #393939;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: .2s;
+}
+.footer-social a:hover { background: #f5a9d0; color: #111; transform: translateY(-3px); }
+.footer-divider { height: 1px; background: #303030; margin-bottom: 28px; }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: #d4d4d4;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.footer-bottom a { color: #eee; text-decoration: none; }
+.footer-heart { color: #f05ca9; font-size: 15px; }
+.footer-logo { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 50px; overflow: hidden; }
+.footer-symbol { width: 115px; flex-shrink: 0; display: flex; flex-direction: column; gap: 9px; }
+.footer-symbol > span:first-child { width: 65%; height: 22px; border-radius: 6px; background: white; align-self: center; }
+.footer-symbol > span:nth-child(2) { height: 28px; border-radius: 6px; background: white; }
+.footer-symbol > div { display: flex; gap: 8px; }
+.footer-symbol > div span { height: 25px; border-radius: 6px; background: white; flex: 1; }
+.footer-symbol > div span:last-child { flex: .55; }
+.footer-wordmark { font-size: clamp(55px, 13vw, 180px); line-height: .95; font-weight: 900; letter-spacing: -7px; color: white; }
+
+@media (max-width: 850px) {
+  .nav { flex-wrap: wrap; }
+  .nav-links { gap: 13px; }
+  .hero { padding: 35px; grid-template-columns: 1fr; }
+  .hero-art { height: 260px; }
+  .categories { grid-template-columns: repeat(3, 1fr); }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-layout, .cart-layout { grid-template-columns: 1fr; }
+  .footer-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .info-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .page { padding: 25px 16px 45px; }
+  .nav { padding: 12px 16px; }
+  .nav-links { width: 100%; justify-content: center; font-size: 13px; }
+  .hero { padding: 28px 20px; }
+  .hero h1 { font-size: 42px; }
+  .categories { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .section-heading { align-items: flex-start; flex-direction: column; }
+  .panel { padding: 18px; }
+  .preview-area { padding: 15px; }
+  .footer-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 18px; }
+  .site-footer { padding: 40px 6% 20px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .footer-logo { gap: 12px; margin-top: 35px; }
+  .footer-symbol { width: 45px; gap: 5px; }
+  .footer-symbol > span:first-child { height: 10px; }
+  .footer-symbol > span:nth-child(2) { height: 13px; }
+  .footer-symbol > div span { height: 12px; }
+  .footer-wordmark { font-size: 17vw; letter-spacing: -2px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <nav class="nav">
+    <div class="logo" onclick="page('home')">cardly<span>.</span></div>
+    <div class="nav-links">
+      <button onclick="page('home')">Home</button>
+      <button onclick="page('shop')">Shop</button>
+      <button onclick="page('studio')">Card Studio</button>
+      <button onclick="page('how')">How it works</button>
+      <button onclick="page('wishlist')">♡ Wishlist <span id="wishCount">0</span></button>
+    </div>
+    <button class="cart-button" onclick="page('cart')">Cart (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="p-home" class="page">
+  <div class="hero">
+    <div>
+      <span class="eyebrow">A little card, a lot of feeling</span>
+      <h1>Make every moment feel special.</h1>
+      <p>Create beautiful digital cards for birthdays, weddings, business, and all the little moments worth celebrating.</p>
+      <div class="hero-actions">
+        <button class="primary" onclick="page('shop')">Explore cards →</button>
+        <button class="secondary" onclick="page('studio')">Create your own</button>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="floating-card card-one">
+        <span style="font-size:34px">✿</span>
+        <strong>Just for<br>you</strong>
+        <small>with love ♡</small>
+      </div>
+      <div class="floating-card card-two">
+        <span style="font-size:30px">✦</span>
+        <strong>Happy<br>Day!</strong>
+        <small>make it memorable</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <div><h2>Find your kind of card</h2><p>Something lovely for every occasion.</p></div>
+    <button class="secondary" onclick="page('shop')">View all cards →</button>
+  </div>
+
+  <div class="categories">
+    <button class="category-card cat-pink" onclick="category('Birthday')"><span>🎂</span>Birthday</button>
+    <button class="category-card cat-purple" onclick="category('Wedding')"><span>💍</span>Wedding</button>
+    <button class="category-card cat-peach" onclick="category('Business')"><span>💼</span>Business</button>
+    <button class="category-card cat-green" onclick="category('Thank You')"><span>💌</span>Thank You</button>
+    <button class="category-card cat-blue" onclick="category('Invitation')"><span>🎉</span>Invitation</button>
+  </div>
+
+  <div class="section-heading">
+    <div><h2>Made to make you smile</h2><p>Our favourite designs, ready for your personal touch.</p></div>
+    <button class="secondary" onclick="page('shop')">See collection →</button>
+  </div>
+  <div id="featured" class="product-grid"></div>
+
+  <div class="section-heading">
+    <div><h2>Your ideas, your design</h2><p>Personalise a card in just a few simple steps.</p></div>
+    <button class="primary" onclick="page('studio')">Open card studio →</button>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="p-shop" class="page hidden">
+  <span class="eyebrow">The Cardly collection</span>
+  <h1 style="font-size:40px;margin-top:8px">Find your perfect card</h1>
+  <p style="color:var(--muted)">Browse designs, pick a favourite, and make it yours.</p>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search cards..." oninput="renderProducts()">
+    <select id="filter" onchange="renderProducts()">
+      <option value="All">All categories</option>
+      <option>Birthday</option>
+      <option>Wedding</option>
+      <option>Business</option>
+      <option>Thank You</option>
+      <option>Invitation</option>
+    </select>
+    <select id="sort" onchange="renderProducts()">
+      <option value="featured">Featured</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+      <option value="name">Name: A to Z</option>
+    </select>
+  </div>
+  <div id="productGrid" class="product-grid"></div>
+</section>
+
+<!-- DESIGN STUDIO -->
+<section id="p-studio" class="page hidden">
+  <span class="eyebrow">Your creative corner</span>
+  <h1 style="font-size:40px;margin-top:8px">Design your own card</h1>
+  <p style="color:var(--muted)">Edit the details and watch your design update live.</p>
+
+  <div class="studio-layout">
+    <div class="panel">
+      <h3>Customise your design</h3>
+
+      <div class="field">
+        <label for="cardTitle">Card title</label>
+        <input id="cardTitle" value="Just for you" maxlength="60" oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <label for="cardMessage">Your message</label>
+        <textarea id="cardMessage" maxlength="400" oninput="updatePreview()">Sending you lots of love, happiness and beautiful memories!</textarea>
+      </div>
+      <div class="field">
+        <label for="cardFrom">From</label>
+        <input id="cardFrom" value="With love ♡" maxlength="60" oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <label for="cardOccasion">Occasion</label>
+        <select id="cardOccasion" onchange="updatePreview()">
+          <option>Just Because</option>
+          <option>Birthday</option>
+          <option>Wedding</option>
+          <option>Thank You</option>
+          <option>Business</option>
+          <option>Invitation</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Choose a colour</label>
+        <div class="palette">
+          <button class="swatch active" style="background:#f8ddea" data-bg="#f8ddea" data-fg="#493044" onclick="color(this)" aria-label="Pink"></button>
+          <button class="swatch" style="background:#ded4ff" data-bg="#ded4ff" data-fg="#38285c" onclick="color(this)" aria-label="Lavender"></button>
+          <button class="swatch" style="background:#ffe1c9" data-bg="#ffe1c9" data-fg="#653c2d" onclick="color(this)" aria-label="Peach"></button>
+          <button class="swatch" style="background:#d4f0e3" data-bg="#d4f0e3" data-fg="#234a3d" onclick="color(this)" aria-label="Mint"></button>
+          <button class="swatch" style="background:#dceeff" data-bg="#dceeff" data-fg="#244568" onclick="color(this)" aria-label="Blue"></button>
+          <button class="swatch" style="background:#29252f" data-bg="#29252f" data-fg="#ffffff" onclick="color(this)" aria-label="Dark"></button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="cardStyle">Card style</label>
+        <select id="cardStyle" onchange="updatePreview()">
+          <option value="rounded">Soft & rounded</option>
+          <option value="classic">Classic square</option>
+          <option value="pill">Extra rounded</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="photoUpload">Add a photo (optional)</label>
+        <input id="photoUpload" type="file" accept="image/*" onchange="loadUpload(event)">
+      </div>
+      <div class="hero-actions">
+        <button class="primary" onclick="downloadCard()">Download PNG ↓</button>
+        <button class="secondary" onclick="resetStudio()">Reset</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Live preview</h3>
+      <div class="preview-area">
+        <div class="preview-card" id="previewCard">
+          <img id="uploadedPreview" class="hidden" alt="Your uploaded photo">
+          <span id="previewOccasion" class="eyebrow">Just Because</span>
+          <h2 id="previewTitle">Just for you</h2>
+          <p id="previewMessage">Sending you lots of love, happiness and beautiful memories!</p>
+          <div class="from" id="previewFrom">With love ♡</div>
+        </div>
+      </div>
+
+      <div class="section-heading"><div><h2 style="font-size:20px">Make it shareable</h2><p>Create a QR code for your card link.</p></div></div>
+      <div class="field">
+        <label for="qrUrl">Website or card link</label>
+        <input id="qrUrl" type="url" placeholder="https://example.com">
+      </div>
+      <button class="secondary" onclick="makeQR()">Generate QR code</button>
+      <div id="qrResult" class="qr-result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="p-how" class="page hidden">
+  <span class="eyebrow">Easy as one, two, three</span>
+  <h1 style="font-size:40px;margin-top:8px">How Cardly works</h1>
+  <p style="color:var(--muted)">A simple way to make your messages more memorable.</p>
+  <div class="info-grid">
+    <div class="info-card"><span>🪄</span><h3>1. Pick a design</h3><p>Explore our card collection and choose a template that fits your occasion.</p></div>
+    <div class="info-card"><span>🎨</span><h3>2. Make it yours</h3><p>Change the message, colours, title and style in the card studio.</p></div>
+    <div class="info-card"><span>💌</span><h3>3. Share the love</h3><p>Download your card as a PNG image or generate a QR code for a link.</p></div>
+  </div>
+  <div class="panel" style="margin-top:25px">
+    <h2>Frequently asked questions</h2>
+    <details style="padding:15px 0;border-bottom:1px solid #eee">
+      <summary><strong>Can I customise my own card?</strong></summary>
+      <p style="margin-top:10px;color:var(--muted)">Yes! Use the Card Studio to edit the title, message, sender, colour and style.</p>
+    </details>
+    <details style="padding:15px 0;border-bottom:1px solid #eee">
+      <summary><strong>Can I download my card?</strong></summary>
+      <p style="margin-top:10px;color:var(--muted)">Yes, click Download PNG in the studio to save an image of your design.</p>
+    </details>
+    <details style="padding:15px 0">
+      <summary><strong>Does checkout process real payments?</strong></summary>
+      <p style="margin-top:10px;color:var(--muted)">No. This is a student mini-project demo. Checkout does not collect payment.</p>
+    </details>
+  </div>
+</section>
+
+<!-- WISHLIST -->
+<section id="p-wishlist" class="page hidden">
+  <span class="eyebrow">Your saved favourites</span>
+  <h1 style="font-size:40px;margin-top:8px">Wishlist ♡</h1>
+  <p style="color:var(--muted);margin-bottom:25px">Keep the designs you love in one place.</p>
+  <div id="wishlistGrid" class="product-grid"></div>
+</section>
+
+<!-- CART -->
+<section id="p-cart" class="page hidden">
+  <span class="eyebrow">Almost yours</span>
+  <h1 style="font-size:40px;margin-top:8px">Your shopping cart</h1>
+  <div class="cart-layout" style="margin-top:25px">
+    <div class="panel">
+      <div id="cartItems"></div>
+    </div>
+    <div class="panel">
+      <h3>Order summary</h3>
+      <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+      <div class="summary-row"><span>Discount</span><span>₹0</span></div>
+      <div class="summary-row summary-total"><span>Total</span><span id="total">₹0</span></div>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px">Demo prices only. No payment is collected.</p>
+      <button class="primary full" onclick="goCheckout()">Continue to checkout →</button>
+      <button class="secondary full" onclick="page('shop')">Continue shopping</button>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKOUT -->
+<section id="p-checkout" class="page hidden">
+  <span class="eyebrow">One last step</span>
+  <h1 style="font-size:40px;margin:8px 0 25px">Checkout</h1>
+  <div class="panel checkout-form">
+    <form id="checkoutForm" onsubmit="checkout(event)">
+      <div class="field"><label for="customerName">Your name</label><input id="customerName" required maxlength="100" placeholder="Enter your name"></div>
+      <div class="field"><label for="customerEmail">Email address</label><input id="customerEmail" type="email" required placeholder="you@example.com"></div>
+      <div class="field"><label for="customerNote">Note (optional)</label><textarea id="customerNote" placeholder="Any special message?"></textarea></div>
+      <div class="summary-row summary-total"><span>Demo total</span><span id="checkoutTotal">₹0</span></div>
+      <button type="submit" class="primary full">Place demo order</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px">This demonstration does not take payment or send an order.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- BLACK FOOTER INSPIRED BY THE PROVIDED SCREENSHOT -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h3>Tools</h3>
+        <a href="#studio" onclick="page('studio')">Digital Card Maker</a>
+        <a href="#shop" onclick="page('shop')">Card Templates</a>
+        <a href="#studio" onclick="page('studio')">Customise a Card</a>
+        <a href="#studio" onclick="page('studio')">Colour & Style</a>
+        <a href="#studio" onclick="page('studio')">Add Your Photo</a>
+        <a href="#studio" onclick="page('studio')">Download Your Card</a>
+        <a class="view-all" href="#studio" onclick="page('studio')">View all</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Explore</h3>
+        <a href="#shop" onclick="category('Birthday')">Birthday Cards</a>
+        <a href="#shop" onclick="category('Wedding')">Wedding Cards</a>
+        <a href="#shop" onclick="category('Business')">Business Cards</a>
+        <a href="#shop" onclick="category('Thank You')">Thank You Cards</a>
+        <a href="#shop" onclick="category('Invitation')">Invitations</a>
+        <a href="#shop" onclick="page('shop')">Popular Designs</a>
+        <a class="view-all" href="#shop" onclick="page('shop')">View all</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Templates</h3>
+        <a href="#shop" onclick="page('shop')">Minimal Cards</a>
+        <a href="#shop" onclick="page('shop')">Floral Templates</a>
+        <a href="#shop" onclick="page('shop')">Modern Designs</a>
+        <a href="#shop" onclick="page('shop')">Cute Cards</a>
+        <a href="#shop" onclick="page('shop')">Elegant Cards</a>
+        <a href="#shop" onclick="page('shop')">Trending Designs</a>
+        <a class="view-all" href="#shop" onclick="page('shop')">View all</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Learn</h3>
+        <a href="#how" onclick="page('how')">About Cardly</a>
+        <a href="#how" onclick="page('how')">Resources</a>
+        <a href="#how" onclick="page('how')">Help Centre</a>
+        <a href="#how" onclick="page('how')">Design Tips</a>
+        <a href="#how" onclick="page('how')">FAQs</a>
+        <a href="#how" onclick="page('how')">How It Works</a>
+        <a href="mailto:hello@example.com">Contact Us</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Company</h3>
+        <a href="#home" onclick="page('home')">Our Story</a>
+        <a href="#shop" onclick="page('shop')">Our Collection</a>
+        <a href="#home" onclick="page('home')">Our Mission</a>
+        <a href="#home" onclick="page('home')">Partnerships</a>
+        <a href="#home" onclick="page('home')">Privacy Policy</a>
+        <a href="#home" onclick="page('home')">Refund Policy</a>
+        <a href="#home" onclick="page('home')">Terms of Service</a>
+      </div>
+    </div>
+
+    <div class="footer-social">
+      <strong>Connect with us</strong>
+      <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X">𝕏</a>
+      <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">▶</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">◎</a>
+      <a href="https://tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok">♪</a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <span>© 2026 CARDLY</span>
+      <a href="#home" onclick="page('home')">TERMS OF SERVICE</a>
+      <span>MADE WITH <span class="footer-heart">♥</span> FOR YOU</span>
+    </div>
+
+    <div class="footer-logo" aria-label="Cardly logo">
+      <div class="footer-symbol">
+        <span></span>
+        <span></span>
+        <div><span></span><span></span></div>
+      </div>
+      <span class="footer-wordmark">CARDLY</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const products = [
+  {id:1,name:"Birthday Bloom",category:"Birthday",desc:"A cheerful floral birthday greeting.",price:99,bg:"#f8ddea",fg:"#493044",title:"Happy Birthday",tag:"Bestseller",icon:"✿"},
+  {id:2,name:"Lavender Love",category:"Wedding",desc:"A soft, romantic wedding card.",price:129,bg:"#ded4ff",fg:"#38285c",title:"Together Forever",tag:"Popular",icon:"♡"},
+  {id:3,name:"Modern Minimal",category:"Business",desc:"A clean and professional design.",price:149,bg:"#29252f",fg:"#ffffff",title:"Let's Connect",tag:"Modern",icon:"✦"},
+  {id:4,name:"Peachy Wishes",category:"Birthday",desc:"Warm colours for a special day.",price:89,bg:"#ffe1c9",fg:"#653c2d",title:"Best Day Ever",tag:"New",icon:"☼"},
+  {id:5,name:"Little Invitation",category:"Invitation",desc:"Invite your favourite people in style.",price:109,bg:"#dceeff",fg:"#244568",title:"You're Invited",tag:"Lovely",icon:"✉"},
+  {id:6,name:"Thank You Petals",category:"Thank You",desc:"A thoughtful way to show gratitude.",price:79,bg:"#d4f0e3",fg:"#234a3d",title:"Thank You",tag:"Sweet",icon:"❀"},
+  {id:7,name:"Golden Moments",category:"Wedding",desc:"An elegant card for a beautiful couple.",price:159,bg:"#f8ebc8",fg:"#6d5122",title:"A Beautiful Union",tag:"Elegant",icon:"✧"},
+  {id:8,name:"Party Pop",category:"Invitation",desc:"Bright and playful party invitations.",price:99,bg:"#f9d8d8",fg:"#713b4b",title:"Let's Celebrate",tag:"Fun",icon:"🎉"},
+  {id:9,name:"Thankful Notes",category:"Thank You",desc:"Simple words, meaningful feelings.",price:69,bg:"#e8e0f7",fg:"#493b6b",title:"So Grateful",tag:"Simple",icon:"♡"},
+  {id:10,name:"Business Basics",category:"Business",desc:"A polished design for your brand.",price:179,bg:"#d9e8e5",fg:"#284f49",title:"Your Brand",tag:"Professional",icon:"◆"},
+  {id:11,name:"Birthday Confetti",category:"Birthday",desc:"A fun card full of happy energy.",price:109,bg:"#ffe8d7",fg:"#824c35",title:"Make a Wish",tag:"Cheerful",icon:"✦"},
+  {id:12,name:"Forever Floral",category:"Wedding",desc:"Romantic details for your big day.",price:139,bg:"#f3dce6",fg:"#6a354e",title:"Our Forever",tag:"Romantic",icon:"❀"}
+];
+
+let wishlist = new Set();
+let cart = {};
+let cardBg = "#f8ddea";
+let cardFg = "#493044";
+let uploadedData = "";
+let toastTimer;
+
+function money(amount) {
+  return "₹" + amount.toLocaleString("en-IN");
+}
+
+function notify(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+}
+
+function page(name) {
+  document.querySelectorAll(".page").forEach(section => section.classList.add("hidden"));
+  const selected = document.getElementById("p-" + name);
+  if (selected) selected.classList.remove("hidden");
+
+  if (name === "shop") renderProducts();
+  if (name === "wishlist") renderWishlist();
+  if (name === "cart") renderCart();
+  if (name === "checkout") updateCheckoutTotal();
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function category(name) {
+  document.getElementById("filter").value = name;
+  document.getElementById("search").value = "";
+  page("shop");
+}
+
+function productCard(product) {
+  const saved = wishlist.has(product.id);
+  return `
+    <article class="product">
+      <div class="product-art" style="background:${product.bg}">
+        <div class="mini-card" style="background:${product.bg};color:${product.fg}">
+          <span style="font-size:25px;margin-bottom:9px">${product.icon}</span>
+          <strong>${product.title}</strong>
+          <small>made with love ♡</small>
+        </div>
+        <button class="heart" onclick="toggleWish(${product.id})" aria-label="Toggle wishlist">
+          ${saved ? "♥" : "♡"}
+        </button>
+      </div>
+      <div class="product-info">
+        <h3>${product.name}</h3>
+        <p>${product.desc}</p>
+        <div class="product-meta">
+          <span class="price">${money(product.price)}</span>
+          <span class="tag">${product.tag}</span>
+        </div>
+        <div class="product-actions">
+          <button class="primary" onclick="addCart(${product.id})">Add to cart</button>
+          <button class="secondary" onclick="customise(${product.id})">Customise</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+function drawProducts(containerId, items) {
+  const container = document.getElementById(containerId);
+  if (!items.length) {
+    container.innerHTML = '<div class="empty-state">No cards found. Try another search.</div>';
+    return;
+  }
+  container.innerHTML = items.map(productCard).join("");
+}
+
+function renderProducts() {
+  const searchText = (document.getElementById("search")?.value || "").toLowerCase();
+  const categoryName = document.getElementById("filter")?.value || "All";
+  const sort = document.getElementById("sort")?.value || "featured";
+
+  let items = products.filter(product => {
+    const matchesCategory = categoryName === "All" || product.category === categoryName;
+    const matchesSearch = (product.name + " " + product.category + " " + product.desc)
+      .toLowerCase().includes(searchText);
+    return matchesCategory && matchesSearch;
+  });
+
+  if (sort === "low") items.sort((a,b) => a.price - b.price);
+  if (sort === "high") items.sort((a,b) => b.price - a.price);
+  if (sort === "name") items.sort((a,b) => a.name.localeCompare(b.name));
+
+  drawProducts("productGrid", items);
+}
+
+function renderFeatured() {
+  drawProducts("featured", products.slice(0,3));
+}
+
+function renderWishlist() {
+  drawProducts("wishlistGrid", products.filter(product => wishlist.has(product.id)));
+}
+
+function toggleWish(id) {
+  if (wishlist.has(id)) {
+    wishlist.delete(id);
+    notify("Removed from your wishlist");
+  } else {
+    wishlist.add(id);
+    notify("Added to your wishlist ♡");
+  }
+  updateCounts();
+  renderProducts();
+  renderFeatured();
+  if (!document.getElementById("p-wishlist").classList.contains("hidden")) renderWishlist();
+}
+
+function updateCounts() {
+  document.getElementById("wishCount").textContent = wishlist.size;
+  document.getElementById("cartCount").textContent =
+    Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+}
+
+function addCart(id) {
+  if (cart[id]) cart[id].qty++;
+  else cart[id] = {qty:1};
+  updateCounts();
+  renderCart();
+  notify("Card added to your cart!");
+}
+
+function changeQty(id, amount) {
+  if (!cart[id]) return;
+  cart[id].qty += amount;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateCounts();
+  renderCart();
+}
+
+function removeCart(id) {
+  delete cart[id];
+  updateCounts();
+  renderCart();
+  notify("Item removed from cart");
+}
+
+function cartSubtotal() {
+  return Object.entries(cart).reduce((sum, [id, item]) => {
+    const product = products.find(p => p.id === Number(id));
+    return sum + (product ? product.price * item.qty : 0);
+  }, 0);
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  const entries = Object.entries(cart);
+
+  if (!entries.length) {
+    container.innerHTML = '<div class="empty-state"><div style="font-size:42px">🛍️</div><h3>Your cart is empty</h3><p>Find something lovely to add.</p><button class="primary" style="margin-top:15px" onclick="page(\'shop\')">Explore cards</button></div>';
+  } else {
+    container.innerHTML = entries.map(([id,item]) => {
+      const p = products.find(product => product.id === Number(id));
+      return `
+        <div class="cart-line">
+          <div class="cart-thumb" style="background:${p.bg};color:${p.fg}">${p.icon}</div>
+          <div class="cart-line-info">
+            <strong>${p.name}</strong>
+            <small>${money(p.price)} each</small>
+            <div class="quantity">
+              <button onclick="changeQty(${p.id},-1)" aria-label="Decrease quantity">−</button>
+              <span>${item.qty}</span>
+              <button onclick="changeQty(${p.id},1)" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+          <strong>${money(p.price * item.qty)}</strong>
+          <button class="remove" onclick="removeCart(${p.id})">Remove</button>
+        </div>`;
+    }).join("");
+  }
+
+  document.getElementById("subtotal").textContent = money(cartSubtotal());
+  document.getElementById("total").textContent = money(cartSubtotal());
+  updateCheckoutTotal();
+}
+
+function goCheckout() {
+  if (!Object.keys(cart).length) {
+    notify("Your cart is empty!");
+    return;
+  }
+  page("checkout");
+}
+
+function updateCheckoutTotal() {
+  const total = document.getElementById("checkoutTotal");
+  if (total) total.textContent = money(cartSubtotal());
+}
+
+function checkout(event) {
+  event.preventDefault();
+
+  if (!Object.keys(cart).length) {
+    notify("Your cart is empty!");
+    page("shop");
+    return;
+  }
+
+  const name = document.getElementById("customerName").value.trim();
+  if (!name) return;
+
+  const orderNumber = "CD" + Date.now().toString().slice(-6);
+  alert("Thank you, " + name + "!\n\nYour demo order " + orderNumber + " has been placed.\n\nThis is a student project demo. No payment was taken.");
+
+  cart = {};
+  document.getElementById("checkoutForm").reset();
+  updateCounts();
+  renderCart();
+  page("home");
+}
+
+function customise(id) {
+  const p = products.find(product => product.id === id);
+  document.getElementById("cardTitle").value = p.title;
+  document.getElementById("cardMessage").value = p.desc;
+  document.getElementById("cardOccasion").value = p.category;
+  document.getElementById("cardFrom").value = "With love ♡";
+
+  cardBg = p.bg;
+  cardFg = p.fg;
+  document.querySelectorAll(".swatch").forEach(swatch => {
+    swatch.classList.toggle("active", swatch.dataset.bg === cardBg);
+  });
+
+  updatePreview();
+  page("studio");
+}
+
+function color(button) {
+  cardBg = button.dataset.bg;
+  cardFg = button.dataset.fg;
+  document.querySelectorAll(".swatch").forEach(swatch => swatch.classList.remove("active"));
+  button.classList.add("active");
+  updatePreview();
+}
+
+function updatePreview() {
+  const preview = document.getElementById("previewCard");
+  preview.style.background = cardBg;
+  preview.style.color = cardFg;
+
+  preview.style.borderRadius =
+    document.getElementById("cardStyle").value === "classic" ? "0" :
+    document.getElementById("cardStyle").value === "pill" ? "55px" : "16px";
+
+  document.getElementById("previewTitle").textContent =
+    document.getElementById("cardTitle").value || "Your title";
+  document.getElementById("previewMessage").textContent =
+    document.getElementById("cardMessage").value || "Your message goes here.";
+  document.getElementById("previewFrom").textContent =
+    document.getElementById("cardFrom").value;
+  document.getElementById("previewOccasion").textContent =
+    document.getElementById("cardOccasion").value;
+}
+
+function loadUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    notify("Please select an image file.");
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    notify("Please choose an image smaller than 5 MB.");
+    event.target.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedData = e.target.result;
+    const img = document.getElementById("uploadedPreview");
+    img.src = uploadedData;
+    img.classList.remove("hidden");
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetStudio() {
+  document.getElementById("cardTitle").value = "Just for you";
+  document.getElementById("cardMessage").value =
+    "Sending you lots of love, happiness and beautiful memories!";
+  document.getElementById("cardFrom").value = "With love ♡";
+  document.getElementById("cardOccasion").value = "Just Because";
+  document.getElementById("cardStyle").value = "rounded";
+  document.getElementById("photoUpload").value = "";
+  document.getElementById("uploadedPreview").classList.add("hidden");
+  document.getElementById("uploadedPreview").removeAttribute("src");
+  uploadedData = "";
+  cardBg = "#f8ddea";
+  cardFg = "#493044";
+  document.querySelectorAll(".swatch").forEach(swatch => {
+    swatch.classList.toggle("active", swatch.dataset.bg === cardBg);
+  });
+  updatePreview();
+  notify("Design reset!");
+}
+
+function downloadCard() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1000;
+  canvas.height = 1250;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = cardBg;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const style = document.getElementById("cardStyle").value;
+  if (style !== "classic") {
+    ctx.strokeStyle = cardFg;
+    ctx.globalAlpha = .3;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(35,35,930,1180,style === "pill" ? 100 : 40);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  const drawText = () => {
+    ctx.fillStyle = cardFg;
+    ctx.textAlign = "center";
+
+    ctx.font = "bold 28px Arial";
+    ctx.fillText(document.getElementById("cardOccasion").value.toUpperCase(),500,190);
+
+    ctx.font = "bold 72px Georgia";
+    const title = document.getElementById("cardTitle").value || "Your title";
+    wrapCanvasText(ctx,title,500,350,780,85);
+
+    ctx.font = "32px Arial";
+    const message = document.getElementById("cardMessage").value || "";
+    wrapCanvasText(ctx,message,500,580,760,48);
+
+    ctx.font = "bold 30px Arial";
+    ctx.fillText(document.getElementById("cardFrom").value,500,1060);
+
+    ctx.font = "22px Arial";
+    ctx.globalAlpha = .7;
+    ctx.fillText("Made with Cardly",500,1165);
+    ctx.globalAlpha = 1;
+
+    const link = document.createElement("a");
+    link.download = "my-cardly-design.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    notify("Your card has been downloaded!");
+  };
+
+  if (uploadedData) {
+    const image = new Image();
+    image.onload = () => {
+      const maxWidth = 250;
+      const maxHeight = 180;
+      const ratio = Math.min(maxWidth / image.width, maxHeight / image.height);
+      const width = image.width * ratio;
+      const height = image.height * ratio;
+      ctx.drawImage(image,500-width/2,430-height/2,width,height);
+      drawText();
+    };
+    image.onerror = () => drawText();
+    image.src = uploadedData;
+  } else {
+    drawText();
+  }
+}
+
+function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight) {
+  const words = text.split(/\s+/);
+  let line = "";
+  const lines = [];
+
+  for (const word of words) {
+    const test = line ? line + " " + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+
+  const visibleLines = lines.slice(0,6);
+  const startY = y - ((visibleLines.length - 1) * lineHeight) / 2;
+
+  visibleLines.forEach((item,index) => {
+    ctx.fillText(item,x,startY + index * lineHeight);
+  });
+}
+
+function makeQR() {
+  const field = document.getElementById("qrUrl");
+  const result = document.getElementById("qrResult");
+  const url = field.value.trim();
+
+  try {
+    const parsed = new URL(url);
+    if (!["http:","https:"].includes(parsed.protocol)) throw new Error();
+  } catch {
+    notify("Enter a valid link starting with https://");
+    field.focus();
+    return;
+  }
+
+  const imageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" +
+    encodeURIComponent(url);
+
+  result.innerHTML = `
+    <p style="margin-bottom:10px">Your QR code is ready:</p>
+    <img id="qrImage" src="${imageUrl}" alt="QR code for your link">
+    <button class="secondary" style="margin-top:12px" onclick="downloadQR()">Download QR code</button>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">Internet access is required to generate this QR code.</p>`;
+
+  document.getElementById("qrImage").onerror = () => {
+    notify("Could not load the QR code. Check your internet connection.");
+  };
+}
+
+async function downloadQR() {
+  const image = document.getElementById("qrImage");
+  if (!image || !image.src) {
+    notify("Generate a QR code first.");
+    return;
+  }
+
+  try {
+    const response = await fetch(image.src);
+    if (!response.ok) throw new Error("Download failed");
+    const blob = await response.blob();
+    const localUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = localUrl;
+    link.download = "cardly-qr-code.png";
+    link.click();
+    URL.revokeObjectURL(localUrl);
+  } catch {
+    window.open(image.src,"_blank","noopener");
+    notify("Opened the QR image. Save it from your browser.");
+  }
+}
+
+// Start the website with example products and the default card preview.
+renderFeatured();
+renderProducts();
+updateCounts();
+updatePreview();
+</script>
+</body>
+</html>
+
+
+
+
+
